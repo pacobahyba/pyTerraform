@@ -1,0 +1,21 @@
+.states
+assets/external/
+.web
+*.py[cod]
+__pycache__/
+*.db
+
+# Virtual environment
+.venv/
+
+# Frontend build artifacts
+dist/
+deploy/
+temp_check/
+frontend.zip
+
+# Terraform
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/.terraform.lock.hcl
