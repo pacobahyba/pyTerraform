@@ -5,12 +5,17 @@ assets/external/
 __pycache__/
 *.db
 
+# Environment variables
+.env
+.env.local
+
 # Virtual environment
 .venv/
 
 # Frontend build artifacts
 dist/
 deploy/
+deploy_frontend/
 temp_check/
 frontend.zip
 
@@ -19,3 +24,4 @@ terraform/.terraform/
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/.terraform.lock.hcl
+terraform/terraform.tfvars

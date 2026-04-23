@@ -1,5 +1,5 @@
 provider "google" {
-  project = "project-a309f04e-7009-423a-92a"
+  project = var.project_id
   region  = "us-central1"
 }
 
@@ -18,7 +18,7 @@ resource "google_cloud_run_service" "app" {
   template {
     spec {
       containers {
-        image = "us-central1-docker.pkg.dev/project-a309f04e-7009-423a-92a/reflex-repo/py-terraform:latest"
+        image = "us-central1-docker.pkg.dev/${var.project_id}/reflex-repo/py-terraform:latest"
         ports {
           container_port = 8000
         }
@@ -42,7 +42,7 @@ resource "google_cloud_run_service_iam_member" "public_access" {
 
 # 4. Bucket para o Frontend Estático
 resource "google_storage_bucket" "frontend_static" {
-  name                        = "frontend-pyterraform-project-a309f04e"
+  name                        = "frontend-pyterraform-${var.project_id}"
   location                    = "us-central1"
   force_destroy               = true
   uniform_bucket_level_access = true
