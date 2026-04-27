@@ -6,12 +6,12 @@ Dashboard de infraestrutura construído com [Reflex](https://reflex.dev/) (Pytho
 
 ```
 Frontend (SPA estático)          Backend (API)
-        │                               │
+        │                              │
 Google Cloud Storage Bucket     Google Cloud Run
-        │                               │
+        │                              │
         └──────────── GCP ─────────────┘
-                          │
-               Artifact Registry (imagem Docker)
+                       │
+         Artifact Registry (imagem Docker)
 ```
 
 - **Frontend:** build estático exportado pelo Reflex, hospedado em um bucket do Cloud Storage configurado como SPA
