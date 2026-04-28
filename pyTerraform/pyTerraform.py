@@ -1,8 +1,16 @@
 import reflex as rx
+from urllib.parse import urlparse
 
 from .config import settings
 
 GRAFANA_DASHBOARD_URL = settings.grafana_dashboard_url
+
+
+def _safe_display_url(url: str) -> str:
+    parsed = urlparse(url)
+    if not parsed.scheme or not parsed.netloc:
+        return "URL configurada"
+    return f"{parsed.scheme}://{parsed.netloc}/..."
 
 
 def grafana_embed() -> rx.Component:
@@ -65,7 +73,7 @@ def grafana_embed() -> rx.Component:
                 is_external=True,
             ),
             rx.text(
-                GRAFANA_DASHBOARD_URL,
+                _safe_display_url(GRAFANA_DASHBOARD_URL),
                 size="1",
                 color_scheme="gray",
                 font_family="monospace",

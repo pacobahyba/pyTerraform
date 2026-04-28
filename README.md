@@ -83,6 +83,8 @@ Este projeto incorpora no frontend um dashboard local com métricas de CPU, mem�
 
 ### 1. Containers usados no ambiente
 
+Observacao de seguranca: o exemplo abaixo habilita embed e acesso anonimo apenas para desenvolvimento local.
+
 ```powershell
 docker run -d --name node-exporter -p 9100:9100 prom/node-exporter
 docker run -d --name prometheus -p 9090:9090 prom/prometheus
@@ -98,10 +100,13 @@ docker run -d `
 ### 2. Configuração do datasource (comando usado)
 
 ```powershell
-cd "C:\Users\Ação da Cidadania\Documents\projetos\pyTerraform" ; python -c "
-import urllib.request, json, base64
+# Execute a partir da raiz do projeto
+python -c "
+import urllib.request, json, base64, os
 
-creds = base64.b64encode(b'admin:admin').decode()
+username = os.environ.get('GRAFANA_USER', 'admin')
+password = os.environ.get('GRAFANA_PASS', 'admin')
+creds = base64.b64encode(f'{username}:{password}'.encode()).decode()
 headers = {'Authorization': f'Basic {creds}', 'Content-Type': 'application/json'}
 
 ds_body = json.dumps({
@@ -124,6 +129,8 @@ except Exception as e:
 "
 ```
 
+Para ambiente real, defina `GRAFANA_USER` e `GRAFANA_PASS` com credenciais fortes e desative acesso anônimo no Grafana.
+
 ### 3. URL final do dashboard (definida via variável de ambiente)
 
 ```text
@@ -144,6 +151,22 @@ terraform plan
 # Aplicar a infraestrutura
 terraform apply
 ```
+
+### Defaults de segurança (Terraform)
+
+Por padrão, este projeto agora cria backend e frontend **sem acesso público**.
+
+Para expor publicamente (quando realmente necessário), passe variáveis explícitas:
+
+```bash
+terraform apply \
+    -var="project_id=<PROJECT_ID>" \
+    -var="enable_public_backend=true" \
+    -var="enable_public_frontend=true" \
+    -var='frontend_cors_origins=["https://seu-dominio.com"]'
+```
+
+Recomendação: mantenha `enable_public_backend=false` e publique o serviço via LB/API Gateway com autenticação.
 
 ### Recursos provisionados
 

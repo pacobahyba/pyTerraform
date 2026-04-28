@@ -20,7 +20,7 @@ resource "google_cloud_run_service" "app" {
       containers {
         image = "us-central1-docker.pkg.dev/${var.project_id}/reflex-repo/py-terraform:latest"
         ports {
-          container_port = 8000
+          container_port = 8080
         }
       }
     }
@@ -34,6 +34,7 @@ resource "google_cloud_run_service" "app" {
 
 # 3. Permissão de acesso público para o Cloud Run
 resource "google_cloud_run_service_iam_member" "public_access" {
+  count    = var.enable_public_backend ? 1 : 0
   service  = google_cloud_run_service.app.name
   location = google_cloud_run_service.app.location
   role     = "roles/run.invoker"
@@ -44,8 +45,9 @@ resource "google_cloud_run_service_iam_member" "public_access" {
 resource "google_storage_bucket" "frontend_static" {
   name                        = "frontend-pyterraform-${var.project_id}"
   location                    = "us-central1"
-  force_destroy               = true
+  force_destroy               = false
   uniform_bucket_level_access = true
+  public_access_prevention    = var.enable_public_frontend ? "inherited" : "enforced"
 
   # CONFIGURAÇÃO CRÍTICA PARA SPA (Single Page Application)
   website {
@@ -55,15 +57,16 @@ resource "google_storage_bucket" "frontend_static" {
   }
 
   cors {
-    origin          = ["*"]
+    origin          = var.frontend_cors_origins
     method          = ["GET", "HEAD", "OPTIONS"]
-    response_header = ["*"]
+    response_header = ["Content-Type"]
     max_age_seconds = 3600
   }
 }
 
 # 5. Permissão de leitura pública para o Bucket
 resource "google_storage_bucket_iam_member" "public_bucket_access" {
+  count  = var.enable_public_frontend ? 1 : 0
   bucket = google_storage_bucket.frontend_static.name
   role   = "roles/storage.objectViewer"
   member = "allUsers"

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import os
 import tomllib
+from urllib.parse import urlparse
 
 
 @dataclass(frozen=True)
@@ -27,9 +28,24 @@ def _read_file_url() -> str:
     return str(grafana.get("dashboard_url", "")).strip()
 
 
+def _normalize_dashboard_url(raw_url: str) -> str:
+    url = raw_url.strip()
+    if not url:
+        return ""
+
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"}:
+        return ""
+
+    if not parsed.netloc:
+        return ""
+
+    return url
+
+
 def load_settings() -> Settings:
-    env_url = os.environ.get("GRAFANA_DASHBOARD_URL", "").strip()
-    file_url = _read_file_url()
+    env_url = _normalize_dashboard_url(os.environ.get("GRAFANA_DASHBOARD_URL", ""))
+    file_url = _normalize_dashboard_url(_read_file_url())
 
     # Environment variable takes precedence over appsettings.toml.
     grafana_dashboard_url = env_url or file_url
