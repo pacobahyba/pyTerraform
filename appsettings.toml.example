@@ -1,0 +1,5 @@
+[grafana]
+# URL completa do dashboard para embed no app.
+# Exemplo:
+# dashboard_url = "http://localhost:3000/d/<dashboard_uid>/node-exporter-full?orgId=1&kiosk"
+dashboard_url = ""

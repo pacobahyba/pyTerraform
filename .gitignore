@@ -8,6 +8,7 @@ __pycache__/
 # Environment variables
 .env
 .env.local
+appsettings.toml
 
 # Virtual environment
 .venv/
