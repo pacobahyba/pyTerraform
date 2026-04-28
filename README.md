@@ -98,7 +98,8 @@ docker run -d `
 ### 2. Configuração do datasource (comando usado)
 
 ```powershell
-cd "C:\Users\Ação da Cidadania\Documents\projetos\pyTerraform" ; python -c "
+# Execute a partir da raiz do projeto
+python -c "
 import urllib.request, json, base64
 
 creds = base64.b64encode(b'admin:admin').decode()
