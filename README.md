@@ -100,9 +100,8 @@ docker run -d `
 ### 2. Configuração do datasource (comando usado)
 
 ```powershell
-# Execute a partir da raiz do projeto
-python -c "
-import urllib.request, json, base64, os
+cd "C:\Users\Ação da Cidadania\Documents\projetos\pyTerraform" ; python -c "
+import urllib.request, json, base64
 
 username = os.environ.get('GRAFANA_USER', 'admin')
 password = os.environ.get('GRAFANA_PASS', 'admin')
